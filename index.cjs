@@ -4,28 +4,28 @@ const crypto = require("crypto");
 const app = express();
 app.use(express.json());
 
-const VERIFICATION_TOKEN = "revel_webhook_token_2025_secure_hash_abcXYZ_001"; // <- ersetze durch deinen echten Token
-const ENDPOINT_URL = "https://ebay-webhook-endpoint.onrender.com/"; // <- exakt so wie bei eBay eingetragen
+const VERIFICATION_TOKEN = "dein_verification_token";
+const ENDPOINT_URL = "https://ebay-webhook-endpoint.onrender.com/"; // exakt wie bei eBay eingetragen
 
-app.post("/", (req, res) => {
+app.get("/", (req, res) => {
   const challengeCode = req.query.challenge_code;
 
   if (!challengeCode) {
     return res.status(400).json({ error: "Missing challenge_code" });
   }
 
-  const hash = crypto
-    .createHash("sha256")
-    .update(challengeCode + VERIFICATION_TOKEN + ENDPOINT_URL)
-    .digest("hex");
+  const hash = crypto.createHash("sha256");
+  hash.update(challengeCode);
+  hash.update(VERIFICATION_TOKEN);
+  hash.update(ENDPOINT_URL);
+  const responseHash = hash.digest("hex");
 
-  res.status(200).json({
-    challengeResponse: hash,
-  });
+  res.setHeader("Content-Type", "application/json");
+  res.status(200).json({ challengeResponse: responseHash });
 });
 
-app.get("/", (req, res) => {
-  res.send("✅ Webhook läuft – POST mit challenge_code erwartet.");
+app.post("/", (req, res) => {
+  res.status(200).json({ message: "POST-Empfang ok." });
 });
 
 const PORT = process.env.PORT || 3000;
