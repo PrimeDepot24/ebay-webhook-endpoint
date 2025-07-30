@@ -1,6 +1,6 @@
-const express = require("express");
-const app = express();
+import express from "express";
 
+const app = express();
 app.use(express.json());
 
 app.post("/", (req, res) => {
@@ -12,7 +12,6 @@ app.post("/", (req, res) => {
   res.status(400).send("Missing challengeCode");
 });
 
-// Optionaler GET-Check
 app.get("/", (req, res) => {
   res.send("✅ Webhook läuft – POST erwartet.");
 });
