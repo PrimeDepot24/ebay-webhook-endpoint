@@ -1,37 +1,23 @@
-// index.js
-
-const express = require('express');
-const bodyParser = require('body-parser');
-
+const express = require("express");
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Konfigurierbarer Token – sollte mit eBay übereinstimmen
-const VERIFICATION_TOKEN = 'revel-ebay-v1';
+app.use(express.json());
 
-app.use(bodyParser.json());
-
-// Healthcheck
-app.get('/', (req, res) => {
-  res.send('eBay Webhook Endpoint läuft ✅');
-});
-
-// Endpoint für eBay Account Deletion Webhook
-app.post('/ebay-deletion', (req, res) => {
-  const incomingToken = req.headers['x-ebay-signature'] || '';
-
-  console.log('Webhook empfangen:', req.body);
-
-  if (!incomingToken || incomingToken !== VERIFICATION_TOKEN) {
-    console.warn('Ungültiger Verification Token:', incomingToken);
-    return res.status(403).send('Forbidden');
+app.post("/", (req, res) => {
+  const challengeCode = req.body.challengeCode;
+  if (challengeCode) {
+    res.set("Content-Type", "text/plain");
+    return res.status(200).send(challengeCode);
   }
-
-  // Logik für Verarbeitung oder Weiterleitung der Webhook-Nachricht hier
-
-  res.status(200).send('Webhook empfangen');
+  res.status(400).send("Missing challengeCode");
 });
 
+// Optionaler GET-Check
+app.get("/", (req, res) => {
+  res.send("✅ Webhook läuft – POST erwartet.");
+});
+
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server läuft auf Port ${PORT}`);
+  console.log(`✅ Webhook läuft auf Port ${PORT}`);
 });
