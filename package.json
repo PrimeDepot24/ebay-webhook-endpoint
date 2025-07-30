@@ -1,0 +1,15 @@
+{
+  "name": "ebay-webhook-endpoint",
+  "version": "1.0.0",
+  "description": "Webhook-Endpoint zur Verarbeitung von eBay Account Deletion Notifications",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": ["ebay", "webhook", "deletion", "api"],
+  "author": "Michael Eckert",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
