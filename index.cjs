@@ -4,7 +4,7 @@ const crypto = require("crypto");
 const app = express();
 app.use(express.json());
 
-const VERIFICATION_TOKEN = "dein_verification_token";
+const VERIFICATION_TOKEN = "eBay_PrimeDeport24_SecureClose_WirMachenDenLadenDicht";
 const ENDPOINT_URL = "https://ebay-webhook-endpoint.onrender.com/"; // exakt wie bei eBay eingetragen
 
 app.get("/", (req, res) => {
